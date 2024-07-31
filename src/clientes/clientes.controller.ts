@@ -39,7 +39,15 @@ export class ClientesController {
 
   @Get()
   getClientes(@Query() paginationDto: PaginationDto) {
-    return this.clienteClient.send({ cmd: 'find_all_clientes' }, paginationDto);
+    console.log('entro por aqui');
+    return this.clienteClient
+      .send({ cmd: 'find_all_clientes' }, paginationDto)
+      .pipe(
+        //para atrapar el Rpc error message que viene desde el microservicio.
+        catchError((error) => {
+          throw new RpcException(error);
+        }),
+      );
   }
 
   @Get(':identificacion')

@@ -9,6 +9,17 @@ export class RpcCustomExceptionFilter implements ExceptionFilter {
     const response = ctx.getResponse();
 
     const rpcError = exception.getError();
+    //Para manejar los errores en caso de que un  microservicio este caido:
+    console.log(rpcError.toString());
+    if (rpcError.toString().includes('Empty response')) {
+      return response.status(500).json({
+        status: 500,
+        //Error: Empty response. There are no subscribers listening to that message ("{"cmd":"find_one_cliente"}"). Solo mostramos hasta antes del primer parentesis
+        message: rpcError
+          .toString()
+          .substring(0, rpcError.toString().indexOf('(') - 1),
+      });
+    }
 
     if (
       typeof rpcError === 'object' &&
