@@ -10,16 +10,19 @@ import {
   Query,
 } from '@nestjs/common';
 import { ClientProxy, RpcException } from '@nestjs/microservices';
-import { CLIENTE_SERVICE } from 'src/config';
+import { NATS_SERVICE } from '../config';
 import { CreateClienteDto } from './dto/create-cliente.dto';
-import { PaginationDto } from 'src/common';
+import { PaginationDto } from '../common';
 import { catchError } from 'rxjs';
 import { UpdateClienteDto } from './dto/update-cliente.dto';
 
 @Controller('clientes')
 export class ClientesController {
   constructor(
-    @Inject(CLIENTE_SERVICE) private readonly clienteClient: ClientProxy,
+    //?Configuracion para TCP
+    // @Inject(CLIENTE_SERVICE) private readonly clienteClient: ClientProxy,
+    //?Configuracion para NATS
+    @Inject(NATS_SERVICE) private readonly clienteClient: ClientProxy,
   ) {}
   @Post()
   createCliente(@Body() createClienteDto: CreateClienteDto) {
@@ -41,12 +44,12 @@ export class ClientesController {
 
   @Get(':identificacion')
   getClienteById(@Param('identificacion') identificacion: string) {
-    //console.log(id);
     return this.clienteClient
       .send({ cmd: 'find_one_cliente' }, { identificacion: identificacion })
       .pipe(
         //para atrapar el Rpc error message que viene desde el microservicio.
         catchError((error) => {
+          //console.log(error);
           throw new RpcException(error);
         }),
       );

@@ -1,13 +1,14 @@
 import { Controller, Get, Inject, Query } from '@nestjs/common';
 import { ClientProxy, RpcException } from '@nestjs/microservices';
-import { REPORTE_SERVICE } from 'src/config';
+import { NATS_SERVICE } from 'src/config';
 import { ParamsReporte } from './dto/params-reporte.dto';
 import { catchError } from 'rxjs';
 
 @Controller('reportes')
 export class ReportesController {
   constructor(
-    @Inject(REPORTE_SERVICE) private readonly reporteClient: ClientProxy,
+    // @Inject(REPORTE_SERVICE) private readonly reporteClient: ClientProxy,
+    @Inject(NATS_SERVICE) private readonly reporteClient: ClientProxy,
   ) {}
   @Get()
   findAll(@Query() parametros: ParamsReporte) {

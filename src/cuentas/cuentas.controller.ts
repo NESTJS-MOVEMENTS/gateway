@@ -9,7 +9,7 @@ import {
   Get,
 } from '@nestjs/common';
 import { CreateCuentaDto } from './dto/create-cuenta.dto';
-import { CUENTA_SERVICE } from 'src/config';
+import { NATS_SERVICE } from '../config';
 import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { catchError } from 'rxjs';
 import { EstadoCuentaDto } from './dto/status-cuenta.dto';
@@ -17,7 +17,10 @@ import { EstadoCuentaDto } from './dto/status-cuenta.dto';
 @Controller('cuentas')
 export class CuentasController {
   constructor(
-    @Inject(CUENTA_SERVICE) private readonly cuentaClient: ClientProxy,
+    //?Configuracion para TCP
+    // @Inject(CLIENTE_SERVICE) private readonly cuentaClient: ClientProxy,
+    //?Configuracion para NATS
+    @Inject(NATS_SERVICE) private readonly cuentaClient: ClientProxy,
   ) {}
   @Post()
   create(@Body() createCuentaDto: CreateCuentaDto) {

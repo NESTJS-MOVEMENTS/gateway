@@ -1,13 +1,16 @@
 import { Controller, Post, Body, Inject } from '@nestjs/common';
 import { CreateMovimientoDto } from './dto/create-movimiento.dto';
-import { MOVIMIENTO_SERVICE } from 'src/config';
+import { NATS_SERVICE } from '../config';
 import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { catchError } from 'rxjs';
 
 @Controller('movimientos')
 export class MovimientosController {
   constructor(
-    @Inject(MOVIMIENTO_SERVICE) private readonly movimientoClient: ClientProxy,
+    //?Configuracion para TCP
+    // @Inject(CLIENTE_SERVICE) private readonly movimientoClient: ClientProxy,
+    //?Configuracion para NATS
+    @Inject(NATS_SERVICE) private readonly movimientoClient: ClientProxy,
   ) {}
 
   @Post()
